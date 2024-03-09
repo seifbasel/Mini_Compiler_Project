@@ -2,16 +2,16 @@ import re
 
 # Define token types using regular expressions
 token_patterns = [
-    (r'\bIF\b', 'IF'),             # Keyword IF
-    (r'\bELIF\b', 'ELIF'),         # Keyword ELIF
-    (r'\bELSE\b', 'ELSE'),         # Keyword ELSE
-    (r'\bFO\b', 'FOR'),           # Keyword FOR
-    (r'\bWHI\b', 'WHILE'),       # Keyword WHILE
-    (r'\bTR\b', 'TRUE'),         # Boolean TRUE
-    (r'\bFA\b', 'FALSE'),       # Boolean FALSE
-    (r'\bAN\b', 'AND'),           # Logical AND
-    (r'\bOR\b', 'OR'),             # Logical OR
-    (r'\bNO\b', 'NOT'),           # Logical NOT
+    (r'\bif\b', 'IF'),             # Keyword IF
+    (r'\belif\b', 'ELIF'),         # Keyword ELIF
+    (r'\belse\b', 'ELSE'),         # Keyword ELSE
+    (r'\bfo\b', 'FOR'),           # Keyword FOR
+    (r'\bwhi\b', 'WHILE'),       # Keyword WHILE
+    (r'\btr\b', 'TRUE'),         # Boolean TRUE
+    (r'\bfa\b', 'FALSE'),       # Boolean FALSE
+    (r'\ban\b', 'AND'),           # Logical AND
+    (r'\bor\b', 'OR'),             # Logical OR
+    (r'\bno\b', 'NOT'),           # Logical NOT
     (r'\d+', 'INTEGER'),           # Integer constant
     (r'\b[a-zA-Z_][a-zA-Z0-9_]*\b', 'IDENTIFIER'),  # Identifiers (variable names)
     (r'[-+*/=]', 'OPERATOR'),      # Arithmetic and assignment operators
@@ -52,3 +52,4 @@ WHI x < 10 =
 """
 tokens = tokenize(source_code)
 print(tokens)
+
