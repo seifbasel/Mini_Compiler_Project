@@ -4,18 +4,11 @@ import re
 token_patterns = [
     (r'\bif\b', 'IF'),             # Keyword IF
     (r'\belif\b', 'ELIF'),         # Keyword ELIF
-    (r'\belse\b', 'ELSE'),         # Keyword ELSE
-    (r'\bfo\b', 'FOR'),           # Keyword FOR
-    (r'\bwhi\b', 'WHILE'),       # Keyword WHILE
-    (r'\btr\b', 'TRUE'),         # Boolean TRUE
-    (r'\bfa\b', 'FALSE'),       # Boolean FALSE
-    (r'\ban\b', 'AND'),           # Logical AND
-    (r'\bor\b', 'OR'),             # Logical OR
-    (r'\bno\b', 'NOT'),           # Logical NOT
+    (r'\bwhile\b', 'WHILE'),       # Keyword WHILE
     (r'\d+', 'INTEGER'),           # Integer constant
     (r'\b[a-zA-Z_][a-zA-Z0-9_]*\b', 'IDENTIFIER'),  # Identifiers (variable names)
     (r'[-+*/=]', 'OPERATOR'),      # Arithmetic and assignment operators
-    (r'[()=]', 'PUNCTUATION'),     # Parentheses and equals sign
+    (r'[()=:]', 'PUNCTUATION'),     # Parentheses and equals sign
     (r'==|!=|<=|>=|[<>]=?', 'COMPARISON'),  # Comparison operators
     (r'\s+', None)                 # Skip whitespace
 ]
@@ -42,14 +35,17 @@ def tokenize(code):
 
     return tokens
 
-# Example usage:
-source_code = """
-x = 5
-WHI x < 10 =
-    x = x + 1
-    IF x > 1=
-    x=x+1
-"""
-tokens = tokenize(source_code)
-print(tokens)
 
+code = """
+if x == 5:
+    y = 10
+elif x < 5:
+    y = 5
+else:
+    y = 0
+"""
+
+tokens = tokenize(code)
+
+for token in tokens:
+    print(token)
