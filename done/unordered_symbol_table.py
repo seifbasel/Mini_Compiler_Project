@@ -55,13 +55,12 @@ def lexer(code):
         if not matched:
             raise Exception('Unexpected character: ' + code[pos])
 
-# Ordered Symbol Table function
-def ordered_symbol_table(code):
+# Unordered Symbol Table function
+def unordered_symbol_table(code):
     symbol_table = {}
     data_type = None
-    declaration_count = 0  # Initialize declaration count
     assignment_mode = False
-    object_address_counter = 100  # Initial memory address counter
+    current_line = 1  # Track current line number
     for token_type, value, line_number in lexer(code):
         if token_type in ['INT', 'FLOAT', 'CHAR']:
             data_type = value
@@ -69,39 +68,53 @@ def ordered_symbol_table(code):
         elif token_type == 'ID':
             identifier = value
             if identifier not in symbol_table:
-                declaration_count += 1  # Increment declaration count for each new identifier
                 symbol_table[identifier] = {
                     'type': data_type,
                     'value': None,
                     'line_declared': line_number,
-                    'count': declaration_count,  # Assign the current declaration count
-                    'object_address': object_address_counter,  # Assign the current object address
-                    'number_of_dimensions': 0  # Number of dimensions for arrays
+                    'number_of_dimensions': 0,
+                    'signal_lines': {line_number},  # Initialize signal_lines with the current line
+                    'object_address': None
                 }
-                object_address_counter += 1  # Increment memory address counter
+            else:
+                symbol_table[identifier]['signal_lines'].add(line_number)  # Update signal_lines for existing identifier
         elif token_type == 'ASSIGN':
             assignment_mode = True
         elif token_type in ['NUMBER', 'CHAR_LITERAL'] and assignment_mode:
             symbol_table[identifier]['value'] = value
             assignment_mode = False
-        elif token_type == 'SEMICOLON':
-            data_type = None
+        elif token_type == 'ID' and not assignment_mode:
+            if value in symbol_table:
+                symbol_table[value]['signal_lines'].add(line_number)  # Update signal_lines when variable is used
+        elif token_type == 'LBRACKET':  # Track array dimensions
+            symbol_table[identifier]['number_of_dimensions'] += 1
+        elif token_type == 'RBRACKET':
+            pass  # Handle end of array dimension
     return symbol_table
 
+
+
 # Example usage
-code = '''int x = 5;
+code = '''
+int x = 5;
 float y = 3.14;
 char c = 'A';
-float z =100;
+float z = x + 1;
 '''
 
-symbol_table = ordered_symbol_table(code)
+symbol_table_unordered = unordered_symbol_table(code)
+
+# Assigning object addresses
+object_address_counter = 100  # Initial memory address counter
+for identifier, details in symbol_table_unordered.items():
+    details['object_address'] = object_address_counter
+    object_address_counter += 1
 
 # Converting symbol table to list of lists for tabulate
-table_data = [['Count', 'Variable Name', 'Type', 'Value', 'Line Declared', 'Object Address']]
-for identifier, details in symbol_table.items():
-    table_data.append([details['count'], identifier, details['type'], details['value'],
-                       details['line_declared'], details['object_address']])
+table_data = [['Variable name', 'Type', 'Value', 'Line Declared', 'Number of Dimensions', 'Signal Lines', 'Object Address']]
+for identifier, details in symbol_table_unordered.items():
+    table_data.append([identifier, details['type'], details['value'], details['line_declared'],
+                       details['number_of_dimensions'], details['signal_lines'], details['object_address']])
 
 # Print table
 print(tabulate(table_data, headers='firstrow', tablefmt='grid'))
