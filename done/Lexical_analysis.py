@@ -2,7 +2,7 @@ import re
 
 # Define tokens
 tokens = [
-    ('NUMBER', r'\d+(\.\d+)?'),  # Pattern for integers and floats
+    ('NUMBER', r'\d+(\.\d+)?'),
     ('PLUS', r'\+'),
     ('MINUS', r'\-'),
     ('TIMES', r'\*'),
@@ -13,7 +13,7 @@ tokens = [
     ('INT', r'int'),
     ('FLOAT', r'float'),
     ('CHAR', r'char'),
-    ('CHAR_LITERAL', r'\'[^\']*\''),  # Pattern for character literals
+    ('CHAR_LITERAL', r'\'[^\']*\''),
     ('ID', r'[a-zA-Z_][a-zA-Z0-9_]*'),
     ('SEMICOLON', r'\;'),
     ('NEWLINE', r'\n'),

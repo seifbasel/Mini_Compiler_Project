@@ -92,7 +92,7 @@ def ordered_symbol_table(code):
 code = '''int x = 5;
 float y = 3.14;
 char c = 'A';
-float z =100;
+float z =5;
 '''
 
 symbol_table = ordered_symbol_table(code)
