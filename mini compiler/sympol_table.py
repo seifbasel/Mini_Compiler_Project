@@ -1,25 +1,20 @@
 import re
 from tabulate import tabulate
 
-# Define tokens with regular expressions
 tokens = [
-    ('NUMBER', r'\d+(\.\d+)?'),    # Integer and float numbers
-    ('PLUS', r'\+'),
-    ('MINUS', r'\-'),
-    ('LPAREN', r'\('),
-    ('RPAREN', r'\)'),
+    ('NUMBER', r'\d+(\.\d+)?'),  
     ('ASSIGN', r'\='),
     ('INT', r'int'),
     ('FLOAT', r'float'),
     ('CHAR', r'char'),
-    ('CHAR_LITERAL', r"\'[^\']*\'"),  # Character literals
-    ('ID', r'[a-zA-Z_][a-zA-Z0-9_]*'),  # Identifiers (variable names)
+    ('CHAR_LITERAL', r"\'[^\']*\'"),  
+    ('ID', r'[a-zA-Z_][a-zA-Z0-9_]*'),
     ('SEMICOLON', r'\;'),
     ('NEWLINE', r'\n'),
     ('WHITESPACE', r'\s+'),
 ]
 
-# Lexer function
+# Lexer 
 def lexer(code):
     pos = 0
     line_number = 1
@@ -33,7 +28,7 @@ def lexer(code):
                 if token_type == 'NEWLINE':
                     line_number += 1
                 elif token_type != 'WHITESPACE':
-                    yield (token_type, value, line_number)  # Yield the token
+                    yield (token_type, value, line_number)
                 pos = match.end()
                 matched = True
                 break
@@ -41,7 +36,6 @@ def lexer(code):
             raise Exception('Unexpected character: ' + code[pos])
 
 
-# Unordered Symbol Table function
 def unordered_symbol_table(code):
     symbol_table = {}
     data_type = None
@@ -49,25 +43,25 @@ def unordered_symbol_table(code):
     object_address_counter = 100  # Initial memory address counter
     for token_type, value, line_number in lexer(code):
         if token_type in ['INT', 'FLOAT', 'CHAR']:
-            data_type = value  # Update current data type
+            data_type = value  # Update current data type that was none
             continue
         elif token_type == 'ID':
             identifier = value
             if identifier not in symbol_table:
-                # Initialize symbol details if the identifier is not in the table
+                # default symbol details if the identifier is not in the table
                 symbol_table[identifier] = {
                     'type': data_type,
                     'value': None,
                     'line_declared': line_number,
                     'number_of_dimensions': 0,
-                    'signal_lines': {line_number},  # Initialize signal lines with the current line
+                    'signal_lines': {line_number},  # assign signal lines with the current line
                     'object_address': object_address_counter
                 }
-                # Increment object address counter by 2 if data type is 'char'
+                # increase object address counter by 2 if data type is 'char'
                 if data_type == 'char':
                     object_address_counter += 2
                 else:
-                    object_address_counter += 1  # Increment object address counter by 1 for other data types
+                    object_address_counter += 1  # increase object address counter by 1 for other data types
             else:
                 # Update signal lines for existing identifier
                 symbol_table[identifier]['signal_lines'].add(line_number)
@@ -81,11 +75,8 @@ def unordered_symbol_table(code):
             # Update signal lines when the variable is used
             if value in symbol_table:
                 symbol_table[value]['signal_lines'].add(line_number)
-        elif token_type == 'LBRACKET':  # Track array dimensions
-            symbol_table[identifier]['number_of_dimensions'] += 1
-        elif token_type == 'RBRACKET':
-            pass  # Handle end of array dimension
     return symbol_table
+
 # Example usage
 code = '''
 int a = 5;
