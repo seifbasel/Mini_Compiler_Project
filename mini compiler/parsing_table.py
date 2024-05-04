@@ -101,5 +101,3 @@ try:
 
 except SyntaxError as e:
     print("\nParsing error:", e)
-
-

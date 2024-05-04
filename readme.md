@@ -8,12 +8,12 @@ This is a mini compiler implemented in Python that performs lexical analysis, pa
 - **Parsing**: Implements a recursive descent parser to parse the input code based on a defined grammar.
 - **Symbol Table Generation**: Constructs a symbol table that records information about variables such as their type, value, declaration line, and object address.
 
-## Grammer
+<!-- ## Grammer
 
 <program>       ::= <declaration>*
 <declaration>   ::= <type> <ID> "=" <value> ";"
 <type>          ::= "int" | "float" | "char"
-<value>         ::= <NUMBER> | <CHAR_LITERAL>
+<value>         ::= <NUMBER> | <CHAR_LITERAL> -->
 
 
 ## Installation

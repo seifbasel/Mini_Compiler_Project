@@ -99,8 +99,6 @@ def recursive_descent_parser(tokens):
     return parse_tree
 
 
-
-
 def print_tree(tree, indent=0):
     for node in tree:
         if isinstance(node, list):
