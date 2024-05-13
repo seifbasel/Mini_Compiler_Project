@@ -23,7 +23,7 @@ def lexer(code):
                 break 
 
 
-def unordered_symbol_table(code):
+def symbol_table(code):
     symbol_table = {}
     for token_type, value in lexer(code):
         if token_type == 'int':
@@ -48,7 +48,7 @@ int c= 3;
 '''
 
 # Get symbol table
-symbol_table_unordered = unordered_symbol_table(code)
+symbol_table_unordered =symbol_table(code)
 
 # Print the symbol table
 print("Symbol Table:")
