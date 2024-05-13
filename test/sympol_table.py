@@ -1,106 +1,65 @@
 import re
-from tabulate import tabulate
 
 tokens = [
-    ('NUMBER', r'\d+(\.\d+)?'),  
-    ('ASSIGN', r'\='),
-    ('INT', r'int'),
-    ('FLOAT', r'float'),
-    ('CHAR', r'char'),
-    ('CHAR_LITERAL', r"\'[^\']*\'"),  
-    ('ID', r'[a-zA-Z_][a-zA-Z0-9_]*'),
-    ('SEMICOLON', r'\;'),
-    ('NEWLINE', r'\n'),
-    ('WHITESPACE', r'\s+'),
+    ('number', r'\d+'),   
+    ('assign', r'\='),
+    ('int', r'int'),
+    ('id', r'[a-z]'),  
+    ('semicolon', r'\;'),
+    ('newline', r'\n'),
+    ('space', r'\s'),
 ]
 
-# Lexer 
+
 def lexer(code):
     pos = 0
-    line_number = 1
     while pos < len(code):
-        matched = False
         for token_type, pattern in tokens:
-            regex = re.compile(pattern)
-            match = regex.match(code, pos)
+            match = re.match(pattern, code[pos:])
             if match:
                 value = match.group(0)
-                if token_type == 'NEWLINE':
-                    line_number += 1
-                elif token_type != 'WHITESPACE':
-                    yield (token_type, value, line_number)
-                pos = match.end()
-                matched = True
-                break
-        if not matched:
-            raise Exception('Unexpected character: ' + code[pos])
+                if token_type != 'newline' and token_type != 'space':
+                    yield (token_type, value)  
+                pos += match.end()
+                break 
 
 
 def unordered_symbol_table(code):
     symbol_table = {}
-    data_type = None
-    assignment_mode = True
-    object_address_counter = 100  # Initial memory address counter
-    for token_type, value, line_number in lexer(code):
-        if token_type in ['INT', 'FLOAT', 'CHAR']:
-            data_type = value  # Update current data type that was none
-            continue
-        elif token_type == 'ID':
+    for token_type, value in lexer(code):
+        if token_type == 'int':
+            data_type = value
+        elif token_type == 'id':
             identifier = value
             if identifier not in symbol_table:
-                # default symbol details if the identifier is not in the table
                 symbol_table[identifier] = {
                     'type': data_type,
                     'value': None,
-                    'line_declared': line_number,
-                    'number_of_dimensions': 0,
-                    'signal_lines': {line_number},  # assign signal lines with the current line
-                    'object_address': object_address_counter
                 }
-                # increase object address counter by 2 if data type is 'char'
-                if data_type == 'char':
-                    object_address_counter += 2
-                else:
-                    object_address_counter += 1  # increase object address counter by 1 for other data types
-            else:
-                # Update signal lines for existing identifier
-                symbol_table[identifier]['signal_lines'].add(line_number)
-        elif token_type == 'ASSIGN':
-            assignment_mode = True  # Enable assignment mode
-        elif token_type in ['NUMBER', 'CHAR_LITERAL'] and assignment_mode:
-            # Assign value to the identifier if in assignment mode
+        elif token_type == 'assign':
+            assignment_mode = True
+        elif token_type == 'number' and assignment_mode:
             symbol_table[identifier]['value'] = value
-            assignment_mode = False  # Disable assignment mode after assignment
-        elif token_type == 'ID' and not assignment_mode:
-            # Update signal lines when the variable is used
+            assignment_mode = False
+        elif token_type == 'id' and not assignment_mode:
             if value in symbol_table:
-                symbol_table[value]['signal_lines'].add(line_number)
+                symbol_table[value]['signal_lines']
+
     return symbol_table
+
 
 # Example usage
 code = '''
 int a = 5;
-float b = 3.14;
-char c = 'A';
-char d = 's + 1';
-int e = 1;
-int f = 100;
+int b = 3;
 '''
 
 # Get symbol table
 symbol_table_unordered = unordered_symbol_table(code)
-symbol_table_data = [['Variable name', 'Type', 'Value', 'Line Declared', 'Number of Dimensions', 'Signal Lines', 'Object Address']]
+
+# Print the symbol table
+print("Symbol Table:")
 for identifier, details in symbol_table_unordered.items():
-    symbol_table_data.append([identifier, details['type'], details['value'], details['line_declared'],
-                              details['number_of_dimensions'], details['signal_lines'], details['object_address']])
-symbol_table = tabulate(symbol_table_data, headers='firstrow', tablefmt='grid')
+    print(f"Identifier: {identifier}, Type: {details['type']}, Value: {details['value']}")
 
-# Print the code itself
-code_table = tabulate([[code]], headers=['Code'], tablefmt='grid')
 
-# Print the tables with titles
-print("\nCode:")
-print(code_table)
-
-print("\nSymbol Table:")
-print(symbol_table)
