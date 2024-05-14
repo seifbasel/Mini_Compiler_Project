@@ -10,6 +10,7 @@ tokens = [
     ('space', r'\s'),
 ]
 
+
 def lexer(code):
     pos = 0
     while pos < len(code):

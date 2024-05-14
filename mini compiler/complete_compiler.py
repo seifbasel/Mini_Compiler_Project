@@ -5,8 +5,8 @@ from tabulate import tabulate
 
 # <program>        ::= <declaration>*
 # <declaration>    ::= <type> <ID> "=" <value> ";"
-# <type>           ::= "int" | "float" | "char"
-# <value>          ::= <NUMBER> | <CHAR_LITERAL>
+# <type>           ::= "int"
+# <value>          ::= <NUMBER>
 
 
 # tokens with regular expressions

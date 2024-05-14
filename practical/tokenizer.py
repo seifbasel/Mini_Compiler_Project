@@ -1,5 +1,10 @@
 import re
 
+# <program>        ::= <declaration>*
+# <declaration>    ::= <type> <ID> "=" <value> ";"
+# <type>           ::= "int"
+# <value>          ::= <NUMBER>
+
 tokens = [
     ('number', r'\d+'),   
     ('assign', r'\='),
