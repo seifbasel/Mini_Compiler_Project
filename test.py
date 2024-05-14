@@ -23,9 +23,20 @@ def lexer(code):
                 break
     
 
-def sympol_table():
+def sympol_table(code):
     sympol_table={}
-    for token,tybe in lexer(code):
+    for token_type,value in lexer(code):
+        if token_type=="int":
+            data_type=value
+        elif token_type=="id":
+            identefier=value
+            sympol_table[identefier]={
+                "tybe":data_type,
+                "value":None,
+            }
+        elif token_type=="number":
+            sympol_table[identefier]["value"]=value
+    return sympol_table
     
 
 
@@ -34,7 +45,10 @@ int a=1;
 int b=2;
 '''
 
-tokenz=list(lexer(code))
-for token, tybe in tokenz:
-    print(token, tybe)
+# tokenz=list(lexer(code))
+# for token, tybe in tokenz:
+#     print(token, tybe)
 
+table=sympol_table(code)
+for id ,details in table.items():
+    print(id,details["tybe"],details["value"])

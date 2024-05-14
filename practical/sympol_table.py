@@ -50,5 +50,3 @@ symbol_table_unordered =symbol_table(code)
 print("Symbol Table:")
 for identifier, details in symbol_table_unordered.items():
     print(f"Identifier: {identifier}, Type: {details['type']}, Value: {details['value']}")
-
-
