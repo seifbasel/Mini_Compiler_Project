@@ -73,4 +73,4 @@ for identifier, details in symbol_table.items():
     print(f"Identifier: {identifier}, Type: {details['type']}, Value: {details['value']}") 
 
 print("\nParse Tree:")
-print_tree(parse_tree)
+print_tree(parse_tree) 
