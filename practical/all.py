@@ -33,11 +33,12 @@ def parse(tokens):
                 data_type = token_list[i][1]
                 identifier = token_list[i+1][1]
                 value = token_list[i+3][1]
-                symbol_table[identifier] = {'type': data_type, 'value': value}
+                symbol_table[identifier] = {
+                    'type': data_type,
+                    'value': value
+                    }
                 
-                # Construct the parse tree for this statement
                 statement = {
-                    'type': 'declaration',
                     'data_type': data_type,
                     'identifier': identifier,
                     'value': value
