@@ -65,6 +65,13 @@ int b = 2;
 int c = 3;
 '''
 
+tokens_list=lexer(code)
+print('token_tybe | token')
+for i,x in tokens_list:
+    
+    print(i,x)
+    
+    
 tokens_gen = lexer(code)
 symbol_table, parse_tree = parse(tokens_gen)
 
