@@ -22,6 +22,7 @@ def lexer(code):
                 pos += match.end()
                 break
 
+
 def parse(tokens):
     symbol_table = {}
     parse_tree = []
